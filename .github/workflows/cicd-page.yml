@@ -1,4 +1,4 @@
-name: 'build and deploy react app'
+name: 'build and deploy vite app'
 
 on:
   push:
@@ -16,12 +16,12 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t ghcr.io/thitima1012/my-bmi-project:latest .
+        run: docker build -t ghcr.io/thitima1012/my-bmi-project:latest .  # เปลี่ยนเป็น GitHub username และชื่อ repository ของคุณ
 
-      - name: Verify Vue Build Output
+      - name: Verify Vite Build Output
         run: |
           CONTAINER_ID=$(docker create ghcr.io/thitima1012/my-bmi-project:latest)
-          docker cp $CONTAINER_ID:/usr/share/nginx/html ./dist
+          docker cp $CONTAINER_ID:/usr/share/nginx/html ./dist  # ใช้โฟลเดอร์ `dist` แทน `build` สำหรับ Vite
           docker rm -v $CONTAINER_ID
           ls -la ./dist
 
@@ -29,4 +29,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist
+          folder: dist  # ใช้ `dist` ซึ่งเป็นโฟลเดอร์ที่ Vite สร้าง
